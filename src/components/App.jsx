@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
-import { ContatcList } from './ContactList/ContactList';
+import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 
 export class App extends Component {
@@ -26,8 +26,11 @@ export class App extends Component {
 
   addContact = contact => {
     const { contacts } = this.state;
+    const normalizedName = contact.name.toLowerCase().trim();
 
-    const isNameInContacts = contacts.some(({ name }) => name === contact.name);
+    const isNameInContacts = contacts.some(
+      ({ name }) => name.toLowerCase() === normalizedName
+    );
 
     if (isNameInContacts) {
       alert(`${contact.name} is already in contacts`);
@@ -50,12 +53,12 @@ export class App extends Component {
     return (
       <div>
         <h1>Phonebook</h1>
-        <ContactForm onSubmit={value => addContact(value)} />
+        <ContactForm onSubmit={addContact} />
 
         <h2>Contacts</h2>
         <Filter value={filter} onChange={filterChange} />
 
-        <ContatcList contacts={visibleContacts} onDelete={deleteContact} />
+        <ContactList contacts={visibleContacts} onDelete={deleteContact} />
       </div>
     );
   }

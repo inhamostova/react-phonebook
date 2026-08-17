@@ -19,8 +19,7 @@ export class ContactForm extends Component {
   handleSubmit = evt => {
     evt.preventDefault();
 
-    const name = evt.currentTarget.name.value;
-    const number = evt.currentTarget.number.value;
+    const { name, number } = this.state;
 
     const contact = {
       id: crypto.randomUUID(),
