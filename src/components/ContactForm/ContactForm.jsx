@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { Error } from './ContactForm.styled';
+import { Error, InputBlock } from './ContactForm.styled';
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -15,26 +15,28 @@ const schema = Yup.object().shape({
 });
 
 export const ContactForm = ({ onSubmit }) => {
+  const handleSubmit = (values, { resetForm }) => {
+    onSubmit({ ...values, id: crypto.randomUUID() });
+    resetForm();
+  };
+
   return (
     <Formik
       initialValues={{ name: '', number: '' }}
       validationSchema={schema}
-      onSubmit={(values, { resetForm }) => {
-        onSubmit({ ...values, id: crypto.randomUUID() });
-        resetForm();
-      }}
+      onSubmit={handleSubmit}
     >
       <Form>
-        <label>
-          Name
+        <InputBlock>
+          <span>Name</span>
           <Field type="text" name="name" />
           <Error component="div" name="name" />
-        </label>
-        <label>
-          Telefon
+        </InputBlock>
+        <InputBlock>
+          <span>Telefon</span>
           <Field type="tel" name="number" />
           <Error component="div" name="number" />
-        </label>
+        </InputBlock>
         <button type="submit">Add contact</button>
       </Form>
     </Formik>
