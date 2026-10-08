@@ -9,8 +9,9 @@ export const App = () => {
   // const [contacts, setContacts] = useState(() => {
   //   return JSON.parse(localStorage.getItem('contacts')) ?? initContatcs;
   // });
+  const filter = useSelector(state => state.filter);
   const contacts = useSelector(state => state.contacts);
-  const [filter, setFilter] = useState('');
+  // const [filter, setFilter] = useState('');
 
   const visibleContacts = useMemo(
     () =>
@@ -24,9 +25,9 @@ export const App = () => {
   //   localStorage.setItem('contacts', JSON.stringify(contacts));
   // }, [contacts]);
 
-  const filterChange = evt => {
-    setFilter(evt.target.value);
-  };
+  // const filterChange = evt => {
+  //   setFilter(evt.target.value);
+  // };
 
   // const deleteContact = contactId => {
   // setContacts(prevContacts =>
@@ -55,7 +56,7 @@ export const App = () => {
       <ContactForm />
 
       <h2>Contacts</h2>
-      <Filter value={filter} onChange={filterChange} />
+      <Filter />
 
       <ContactList contacts={visibleContacts} />
     </Container>
