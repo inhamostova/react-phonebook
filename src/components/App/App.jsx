@@ -3,18 +3,13 @@ import { ContactForm } from '../ContactForm/ContactForm';
 import { ContactList } from '../ContactList/ContactList';
 import { Filter } from '../Filter/Filter';
 import { Container } from './App.styled';
-
-const initContatcs = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
+import { useSelector } from 'react-redux';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    return JSON.parse(localStorage.getItem('contacts')) ?? initContatcs;
-  });
+  // const [contacts, setContacts] = useState(() => {
+  //   return JSON.parse(localStorage.getItem('contacts')) ?? initContatcs;
+  // });
+  const contacts = useSelector(state => state.contacts);
   const [filter, setFilter] = useState('');
 
   const visibleContacts = useMemo(
@@ -25,44 +20,44 @@ export const App = () => {
     [contacts, filter]
   );
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //   localStorage.setItem('contacts', JSON.stringify(contacts));
+  // }, [contacts]);
 
   const filterChange = evt => {
     setFilter(evt.target.value);
   };
 
-  const deleteContact = contactId => {
-    setContacts(prevContacts =>
-      prevContacts.filter(({ id }) => id !== contactId)
-    );
-  };
+  // const deleteContact = contactId => {
+  // setContacts(prevContacts =>
+  //   prevContacts.filter(({ id }) => id !== contactId)
+  // );
+  // };
 
-  const addContact = contact => {
-    const normalizedName = contact.name.toLowerCase().trim();
+  // const addContact = contact => {
+  //   const normalizedName = contact.name.toLowerCase().trim();
 
-    const isNameInContacts = contacts.some(
-      ({ name }) => name.toLowerCase() === normalizedName
-    );
+  //   const isNameInContacts = contacts.some(
+  //     ({ name }) => name.toLowerCase() === normalizedName
+  //   );
 
-    if (isNameInContacts) {
-      alert(`${contact.name} is already in contacts`);
-      return;
-    }
+  //   if (isNameInContacts) {
+  //     alert(`${contact.name} is already in contacts`);
+  //     return;
+  //   }
 
-    setContacts(prevContacts => [contact, ...prevContacts]);
-  };
+  //   setContacts(prevContacts => [contact, ...prevContacts]);
+  // };
 
   return (
     <Container>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={addContact} />
+      <ContactForm />
 
       <h2>Contacts</h2>
       <Filter value={filter} onChange={filterChange} />
 
-      <ContactList contacts={visibleContacts} onDelete={deleteContact} />
+      <ContactList contacts={visibleContacts} />
     </Container>
   );
 };
