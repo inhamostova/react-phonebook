@@ -21,6 +21,17 @@ export const App = () => {
     [contacts, filter]
   );
 
+  return (
+    <Container>
+      <h1>Phonebook</h1>
+      <ContactForm />
+
+      <h2>Contacts</h2>
+      <Filter />
+
+      <ContactList contacts={visibleContacts} />
+    </Container>
+  );
   // useEffect(() => {
   //   localStorage.setItem('contacts', JSON.stringify(contacts));
   // }, [contacts]);
@@ -49,20 +60,23 @@ export const App = () => {
 
   //   setContacts(prevContacts => [contact, ...prevContacts]);
   // };
-
-  return (
-    <Container>
-      <h1>Phonebook</h1>
-      <ContactForm />
-
-      <h2>Contacts</h2>
-      <Filter />
-
-      <ContactList contacts={visibleContacts} />
-    </Container>
-  );
 };
 
+// function findShort(str) {
+//   const arr = str.split(' ');
+//   let shortestWord = arr[0];
+//   for (const word of arr) {
+//     shortestWord = word.length < shortestWord.length ? word : shortestWord;
+//   }
+//   return shortestWord;
+// }
+
+// function findShort(str) {
+//   return str.split(' ').sort((a, b) => a.length - b.length)[0];
+// }
+
+// console.log(findShort('The smallest word in sentence'));
+// console.log(findShort('Just test string'));
 // export class OldApp extends Component {
 //   state = {
 //     contacts: initContatcs,
