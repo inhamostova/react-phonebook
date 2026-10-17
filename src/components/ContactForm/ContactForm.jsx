@@ -20,18 +20,25 @@ export const ContactForm = () => {
   const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
-  const handleSubmit = (values, { resetForm }) => {
-    const normalizedName = values.name.toLowerCase().trim();
-    const isAlreasdyInContacts = contacts.some(
-      ({ name }) => name.toLowerCase() === normalizedName
-    );
-    if (isAlreasdyInContacts) {
-      alert(`Contact ${values.name} is already in list`);
-      return;
-    }
-    dispatch(addContact(values));
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      const normalizedName = values.name.toLowerCase().trim();
+      const isAlreasdyInContacts = contacts.some(
+        ({ name }) => name.toLowerCase() === normalizedName
+      );
+      if (isAlreasdyInContacts) {
+        alert(`Contact ${values.name} is already in list`);
+        return;
+      }
 
-    resetForm();
+      await dispatch(addContact(values)).unwrap();
+      resetForm();
+      return;
+    } catch (rejectedValueOrSerializedError) {
+      return rejectedValueOrSerializedError;
+    }
+
+    // resetForm();
   };
 
   return (

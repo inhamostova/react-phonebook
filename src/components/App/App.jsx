@@ -5,9 +5,14 @@ import { Filter } from '../Filter/Filter';
 import { Container } from './App.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContacts } from '../../redux/operations';
-import { selectError, selectIsLoading } from '../../redux/selectors';
+import {
+  selectContacts,
+  selectError,
+  selectIsLoading,
+} from '../../redux/selectors';
 
 export const App = () => {
+  const contacts = useSelector(selectContacts);
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
   const dispatch = useDispatch();
@@ -23,7 +28,7 @@ export const App = () => {
 
       <h2>Contacts</h2>
       <Filter />
-      {isLoading && <p>Loading your contacts...</p>}
+      {isLoading && !contacts.length && <p>Loading your contacts...</p>}
       {error ? <p>Oops something went wrong...</p> : <ContactList />}
     </Container>
   );

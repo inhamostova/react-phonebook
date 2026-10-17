@@ -6,11 +6,16 @@ const getActions = type => actions.map(action => action[type]);
 
 const handlePending = state => {
   state.isLoading = true;
+  state.error = null;
 };
 
 const handleError = (state, action) => {
   state.isLoading = false;
   state.error = action.payload;
+};
+
+const handleFulfilled = state => {
+  state.isLoading = false;
 };
 
 const contactsSlice = createSlice({
@@ -23,22 +28,17 @@ const contactsSlice = createSlice({
   extraReducers: builder =>
     builder
       .addCase(fetchContacts.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = null;
         state.items = action.payload;
       })
       .addCase(addContact.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = null;
         state.items.push(action.payload);
       })
       .addCase(deleteContact.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = null;
         state.items = state.items.filter(item => item.id !== action.payload.id);
       })
       .addMatcher(isAnyOf(...getActions('pending')), handlePending)
-      .addMatcher(isAnyOf(...getActions('rejected')), handleError),
+      .addMatcher(isAnyOf(...getActions('rejected')), handleError)
+      .addMatcher(isAnyOf(...getActions('fulfilled')), handleFulfilled),
 });
 
 export const contactsReducer = contactsSlice.reducer;
