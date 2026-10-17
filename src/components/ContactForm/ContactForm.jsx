@@ -1,23 +1,23 @@
-// import PropTypes from 'prop-types';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Error, InputBlock } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/contactsSlice';
+import { addContact } from '../../redux/operations';
+import { selectContacts } from '../../redux/selectors';
 
 const schema = Yup.object().shape({
   name: Yup.string()
     .min(2, 'Too Short!')
     .max(70, 'Too Long!')
     .required('Required'),
-  number: Yup.string()
+  phone: Yup.string()
     .min(6, 'Too Short!')
     .max(9, 'Too Long!')
     .required('Required'),
 });
 
 export const ContactForm = () => {
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
   const handleSubmit = (values, { resetForm }) => {
@@ -36,7 +36,7 @@ export const ContactForm = () => {
 
   return (
     <Formik
-      initialValues={{ name: '', number: '' }}
+      initialValues={{ name: '', phone: '' }}
       validationSchema={schema}
       onSubmit={handleSubmit}
     >
@@ -48,8 +48,8 @@ export const ContactForm = () => {
         </InputBlock>
         <InputBlock>
           <span>Telefon</span>
-          <Field type="tel" name="number" />
-          <Error component="div" name="number" />
+          <Field type="tel" name="phone" />
+          <Error component="div" name="phone" />
         </InputBlock>
         <button type="submit">Add contact</button>
       </Form>

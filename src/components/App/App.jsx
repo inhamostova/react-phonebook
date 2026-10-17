@@ -1,25 +1,20 @@
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 import { ContactForm } from '../ContactForm/ContactForm';
 import { ContactList } from '../ContactList/ContactList';
 import { Filter } from '../Filter/Filter';
 import { Container } from './App.styled';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContacts } from '../../redux/operations';
+import { selectError, selectIsLoading } from '../../redux/selectors';
 
 export const App = () => {
-  // const [contacts, setContacts] = useState(() => {
-  //   return JSON.parse(localStorage.getItem('contacts')) ?? initContatcs;
-  // });
-  const filter = useSelector(state => state.filter);
-  const contacts = useSelector(state => state.contacts);
-  // const [filter, setFilter] = useState('');
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const dispatch = useDispatch();
 
-  const visibleContacts = useMemo(
-    () =>
-      contacts.filter(contact =>
-        contact.name.toLowerCase().includes(filter.toLowerCase())
-      ),
-    [contacts, filter]
-  );
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <Container>
@@ -28,8 +23,8 @@ export const App = () => {
 
       <h2>Contacts</h2>
       <Filter />
-
-      <ContactList contacts={visibleContacts} />
+      {isLoading && <p>Loading your contacts...</p>}
+      {error ? <p>Oops something went wrong...</p> : <ContactList />}
     </Container>
   );
   // useEffect(() => {
@@ -62,21 +57,6 @@ export const App = () => {
   // };
 };
 
-// function findShort(str) {
-//   const arr = str.split(' ');
-//   let shortestWord = arr[0];
-//   for (const word of arr) {
-//     shortestWord = word.length < shortestWord.length ? word : shortestWord;
-//   }
-//   return shortestWord;
-// }
-
-// function findShort(str) {
-//   return str.split(' ').sort((a, b) => a.length - b.length)[0];
-// }
-
-// console.log(findShort('The smallest word in sentence'));
-// console.log(findShort('Just test string'));
 // export class OldApp extends Component {
 //   state = {
 //     contacts: initContatcs,

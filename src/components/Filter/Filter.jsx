@@ -1,9 +1,10 @@
 // import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeFilter } from '../../redux/filterSlice';
+import { selectFilter } from '../../redux/selectors';
 
 export const Filter = () => {
-  const value = useSelector(state => state.filter);
+  const value = useSelector(selectFilter);
   const dispatch = useDispatch();
   return (
     <label>

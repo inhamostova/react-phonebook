@@ -1,23 +1,15 @@
 import { ContactListItem } from 'components/ContactListItem/ContactListItem';
-import PropTypes from 'prop-types';
 import { List } from './ContactList.styled';
+import { useSelector } from 'react-redux';
+import { selectVisisbleContacts } from '../../redux/selectors';
 
-export const ContactList = ({ contacts }) => {
+export const ContactList = () => {
+  const contacts = useSelector(selectVisisbleContacts);
   return (
     <List>
-      {contacts.map(({ id, name, number }) => (
-        <ContactListItem key={id} id={id} name={name} number={number} />
+      {contacts.map(({ id, name, phone }) => (
+        <ContactListItem key={id} id={id} name={name} number={phone} />
       ))}
     </List>
   );
-};
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
 };
