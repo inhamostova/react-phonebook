@@ -10,16 +10,19 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 //   REGISTER,
 // } from 'redux-persist';
 // import storage from 'redux-persist/lib/storage';
-import { contactsReducer } from './contactsSlice';
+import { contactsApi } from './contactsSlice';
 import { filtrReducer } from './filterSlice';
 
 const rootReducer = combineReducers({
-  contacts: contactsReducer,
+  // contacts: contactsReducer,
   filter: filtrReducer,
+  [contactsApi.reducerPath]: contactsApi.reducer,
 });
 
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(contactsApi.middleware),
 });
 
 // const persistConfig = {

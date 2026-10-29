@@ -1,9 +1,10 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Error, InputBlock } from './ContactForm.styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/operations';
-import { selectContacts } from '../../redux/selectors';
+import {
+  useGetContactsQuery,
+  usePostContactMutation,
+} from '../../redux/contactsSlice';
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -17,28 +18,26 @@ const schema = Yup.object().shape({
 });
 
 export const ContactForm = () => {
-  const contacts = useSelector(selectContacts);
-  const dispatch = useDispatch();
+  const { data: contacts } = useGetContactsQuery();
+  const [addContact, { isLoading }] = usePostContactMutation();
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
       const normalizedName = values.name.toLowerCase().trim();
-      const isAlreasdyInContacts = contacts.some(
+      const isAlreasdyInContacts = contacts?.some(
         ({ name }) => name.toLowerCase() === normalizedName
       );
+      console.log(isAlreasdyInContacts);
       if (isAlreasdyInContacts) {
         alert(`Contact ${values.name} is already in list`);
         return;
       }
-
-      await dispatch(addContact(values)).unwrap();
+      await addContact(values);
       resetForm();
       return;
     } catch (rejectedValueOrSerializedError) {
       return rejectedValueOrSerializedError;
     }
-
-    // resetForm();
   };
 
   return (
@@ -58,7 +57,9 @@ export const ContactForm = () => {
           <Field type="tel" name="phone" />
           <Error component="div" name="phone" />
         </InputBlock>
-        <button type="submit">Add contact</button>
+        <button disabled={isLoading} type="submit">
+          {isLoading ? 'Adding contacts...' : 'Add contact'}
+        </button>
       </Form>
     </Formik>
   );

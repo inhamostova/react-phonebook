@@ -1,5 +1,6 @@
 import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { fetchContacts, addContact, deleteContact } from './operations';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const actions = [fetchContacts, addContact, deleteContact];
 const getActions = type => actions.map(action => action[type]);
@@ -40,5 +41,40 @@ const contactsSlice = createSlice({
       .addMatcher(isAnyOf(...getActions('rejected')), handleError)
       .addMatcher(isAnyOf(...getActions('fulfilled')), handleFulfilled),
 });
+
+export const contactsApi = createApi({
+  reducerPath: 'contacts',
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'https://6ad34e1c59dd78397bbb8d62.mockapi.io',
+  }),
+  tagTypes: ['Contacts'],
+  endpoints: builder => ({
+    getContacts: builder.query({
+      query: () => '/contacts',
+      providesTags: ['Contacts'],
+    }),
+    postContact: builder.mutation({
+      query: data => ({
+        url: '/contacts',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Contacts'],
+    }),
+    deleteContact: builder.mutation({
+      query: id => ({
+        url: `/contacts/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Contacts'],
+    }),
+  }),
+});
+
+export const {
+  useGetContactsQuery,
+  usePostContactMutation,
+  useDeleteContactMutation,
+} = contactsApi;
 
 export const contactsReducer = contactsSlice.reducer;
